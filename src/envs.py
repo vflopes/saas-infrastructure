@@ -1,14 +1,6 @@
 import os
 import configparser
-import pathlib
-from typing import Optional, Iterable
-
-# config = configparser.ConfigParser()
-# config.read("envs.ini")
-
-
-def list_folders(base_path: str) -> Iterable[pathlib.Path]:
-    return filter(os.path.isdir, pathlib.Path(base_path).iterdir())
+from typing import Optional
 
 
 def get_env_config(env_path: str) -> configparser.ConfigParser:
@@ -57,7 +49,3 @@ def validate_required_options(
             ],
         )
     )
-
-
-if __name__ == "__main__":
-    print("Hello, World!")
