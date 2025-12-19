@@ -32,7 +32,7 @@ RUN pipx ensurepath --global &&\
 
 WORKDIR /workspace
 
-COPY pyproject.toml poetry.lock /workspace/
+COPY pyproject.toml /workspace/
 
 RUN poetry env use /usr/local/bin/python &&\
   poetry install --no-interaction --no-ansi --all-groups
