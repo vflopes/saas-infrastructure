@@ -1,6 +1,7 @@
 name: Deploy to Tfstate Output Store (Lambda)
 
 on:
+  workflow_dispatch: {}
   push:
     branches: ["main"]
     paths:
