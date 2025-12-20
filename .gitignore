@@ -83,3 +83,16 @@ venv.bak/
 
 # Custom files
 envs.ini
+
+# Terraform files
+
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+crash.log
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terragrunt-cache/

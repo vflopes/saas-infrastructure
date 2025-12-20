@@ -8,12 +8,6 @@ if __name__ == "__main__":
     cov = Coverage()
     cov.load()
 
-    fl = (
-        1,
-        2,
-        3,
-    )
-
     null_io = open(os.devnull, "w")
 
     total_coverage = cov.report(
