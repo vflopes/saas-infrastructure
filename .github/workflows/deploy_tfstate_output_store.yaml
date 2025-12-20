@@ -57,3 +57,5 @@ jobs:
           s3-bucket: ${{ secrets.AWS_S3_BUCKET }}
           s3-key: "${{ github.event.repository.name }}/${{ matrix.environment }}/tfstate-output-store.zip"
           publish: true
+          handler: src.tfstate_output_store.lambda_handler
+          runtime: python3.13

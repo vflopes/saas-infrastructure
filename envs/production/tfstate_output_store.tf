@@ -52,7 +52,6 @@ resource "aws_lambda_function" "tfstate_output_store" {
   filename      = "${path.module}/dummy_lambda.zip"
   function_name = "tfstate-output-store"
   role          = aws_iam_role.tfstate_output_store.arn
-  handler       = "src.tfstate_output_store.lambda_handler"
   memory_size   = 128
   timeout       = 10
 
@@ -62,7 +61,12 @@ resource "aws_lambda_function" "tfstate_output_store" {
     system_log_level      = "WARN"
   }
 
-  runtime = "python3.13"
+  lifecycle {
+    ignore_changes = [
+      runtime,
+      handler,
+    ]
+  }
 
 }
 
