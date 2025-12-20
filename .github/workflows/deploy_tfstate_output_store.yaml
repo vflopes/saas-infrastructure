@@ -11,13 +11,13 @@ permissions:
   id-token: write
   contents: read
 
-env:
-  ENVIRONMENT: production
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: $ENVIRONMENT
+    strategy:
+      matrix:
+        environment: [production]
+    environment: ${{ matrix.environment }}
 
     steps:
       - name: Checkout code
@@ -55,5 +55,5 @@ jobs:
           function-name: tfstate-output-store
           code-artifacts-dir: build
           s3-bucket: ${{ secrets.AWS_S3_BUCKET }}
-          s3-key: "${{ github.event.repository.name }}/${{ env.ENVIRONMENT }}/tfstate-output-store.zip"
+          s3-key: "${{ github.event.repository.name }}/${{ matrix.environment }}/tfstate-output-store.zip"
           publish: true
