@@ -55,6 +55,7 @@ data "aws_iam_policy_document" "github_oidc_ci" {
       "lambda:UpdateFunctionCode",
       "lambda:UpdateFunctionConfiguration",
       "lambda:PublishVersion",
+      "cloudfront:CreateInvalidation",
     ]
     resources = ["*"]
   }
