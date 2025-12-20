@@ -12,3 +12,8 @@ output "root_domain_dns_server_names" {
   description = "The DNS server names for the root domain's Route 53 hosted zone"
   value       = aws_route53_zone.root.name_servers
 }
+
+output "root_domain_certificate_arn" {
+  description = "The ARN of the ACM certificate for the root domain"
+  value       = aws_acm_certificate_validation.root_domain.certificate_arn
+}

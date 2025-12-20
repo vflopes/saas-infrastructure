@@ -22,6 +22,11 @@ terraform {
 
 provider "aws" {}
 
+provider "aws" {
+  alias  = "aws_us_east_1"
+  region = "us-east-1"
+}
+
 data "aws_s3_bucket" "tfstate" {
   bucket = local.tfstate_bucket_name
 }

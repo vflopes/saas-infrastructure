@@ -38,6 +38,18 @@ resource "aws_iam_policy" "tfstate_output_store" {
           "ssm:PutParameter",
         ]
         Resource = ["arn:aws:ssm:*:*:parameter/*"]
+      },
+      {
+        Sid    = "AllowReadTfstateFilesFromS3",
+        Effect = "Allow",
+        Action = [
+          "s3:GetObject",
+          "s3:ListBucket",
+        ],
+        Resource = [
+          data.aws_s3_bucket.tfstate.arn,
+          "${data.aws_s3_bucket.tfstate.arn}/*",
+        ]
       }
     ]
   })
