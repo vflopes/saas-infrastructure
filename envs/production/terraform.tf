@@ -22,6 +22,9 @@ terraform {
 
 provider "aws" {}
 
+data "aws_caller_identity" "current" {}
+data "aws_region" "current" {}
+
 provider "aws" {
   alias  = "aws_us_east_1"
   region = "us-east-1"

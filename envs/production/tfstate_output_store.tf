@@ -1,4 +1,3 @@
-# IAM role for Lambda execution
 data "aws_iam_policy_document" "tfstate_assume_role" {
   statement {
     effect = "Allow"

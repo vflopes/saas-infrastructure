@@ -17,3 +17,8 @@ output "root_domain_certificate_arn" {
   description = "The ARN of the ACM certificate for the root domain"
   value       = aws_acm_certificate_validation.root_domain.certificate_arn
 }
+
+output "ses_root_domain_identity_arn" {
+  description = "The ARN of the SES domain identity for the root domain"
+  value       = aws_ses_domain_identity_verification.root_domain_verification.arn
+}
