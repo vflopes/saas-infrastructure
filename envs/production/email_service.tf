@@ -2,6 +2,31 @@ resource "aws_ses_domain_identity" "root_domain" {
   domain = local.root_domain
 }
 
+data "aws_iam_policy_document" "root_domain_identity_policy" {
+  statement {
+    actions   = ["SES:SendEmail", "SES:SendRawEmail"]
+    resources = [aws_ses_domain_identity.root_domain.arn]
+
+    principals {
+      type        = "Service"
+      identifiers = ["cognito-idp.amazonaws.com"]
+    }
+
+    condition {
+      test     = "StringEquals"
+      variable = "aws:SourceAccount"
+      values   = [data.aws_caller_identity.current.account_id]
+    }
+
+  }
+}
+
+resource "aws_ses_identity_policy" "root_domain_identity_policy" {
+  identity = aws_ses_domain_identity.root_domain.arn
+  name     = "identity-policy"
+  policy   = data.aws_iam_policy_document.root_domain_identity_policy.json
+}
+
 resource "aws_route53_record" "root_domain_ses_verification" {
   zone_id = aws_route53_zone.root.zone_id
   name    = "_amazonses.${local.root_domain}"

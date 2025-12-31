@@ -61,6 +61,8 @@ resource "aws_iam_role_policy_attachment" "tfstate_output_store" {
 
 resource "aws_lambda_function" "tfstate_output_store" {
   filename      = "${path.module}/dummy_lambda.zip"
+  runtime       = "python3.13"
+  handler       = "index.handler"
   function_name = "tfstate-output-store"
   role          = aws_iam_role.tfstate_output_store.arn
   memory_size   = 128

@@ -59,6 +59,16 @@ data "aws_iam_policy_document" "github_oidc_ci" {
     ]
     resources = ["*"]
   }
+  statement {
+    sid    = "FrontendS3Bucket"
+    effect = "Allow"
+    actions = [
+      "s3:DeleteObject"
+    ]
+    resources = [
+      "arn:aws:s3:::saas-frontend-*/*",
+    ]
+  }
 }
 
 resource "aws_iam_policy" "github_oidc_ci" {
