@@ -22,3 +22,8 @@ output "ses_root_domain_identity_arn" {
   description = "The ARN of the SES domain identity for the root domain"
   value       = aws_ses_domain_identity_verification.root_domain_verification.arn
 }
+
+output "api_gateway_id" {
+  description = "The ID of the API Gateway for the production environment"
+  value       = aws_apigatewayv2_api.saas_api.id
+}

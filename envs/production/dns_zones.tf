@@ -2,18 +2,6 @@ resource "aws_route53_zone" "root" {
   name = local.root_domain
 }
 
-resource "aws_route53_zone" "api" {
-  name = "api.${local.root_domain}"
-}
-
-resource "aws_route53_record" "api_ns" {
-  zone_id = aws_route53_zone.root.zone_id
-  name    = "api.${local.root_domain}"
-  type    = "NS"
-  ttl     = "30"
-  records = aws_route53_zone.api.name_servers
-}
-
 resource "aws_route53_record" "root_domain_txt" {
   zone_id = aws_route53_zone.root.zone_id
   name    = local.root_domain
@@ -43,6 +31,7 @@ resource "aws_route53_record" "gmail_dkim" {
   ttl     = "30"
   records = [var.gmail_dkim_value]
 }
+
 resource "aws_acm_certificate" "root_domain" {
   provider                  = aws.aws_us_east_1
   domain_name               = local.root_domain # Replace with your full domain

@@ -68,11 +68,14 @@ class TestTfstateStoreFunctions(unittest.TestCase):
     def test_get_outputs_from_tfstate(self):
         from src.tfstate_output_store import get_outputs_from_tfstate
 
-        tfstate_data = '{"outputs": {"key1": {"value": "value1"}, "key2": {"value": "value2"}}}'
+        tfstate_data = '{"outputs": {"key1": {"value": "value1"}, "key2": {"value": "value2", "sensitive": true}}}'
 
         outputs = get_outputs_from_tfstate(tfstate_data)
 
-        expected_outputs = {"key1": "value1", "key2": "value2"}
+        expected_outputs = {
+            "key1": ("value1", False),
+            "key2": ("value2", True),
+        }
         self.assertEqual(outputs, expected_outputs)
 
     def test_parse_tfstate_key(self):
@@ -108,6 +111,33 @@ class TestTfstateStoreFunctions(unittest.TestCase):
             Name="/my-repo/prod/output1",
             Value="value1",
             Type="String",
+            Overwrite=True,
+            Tier="Standard",
+        )
+
+    def test_save_outputs_to_ssm_secret(self):
+        from src.tfstate_output_store import (
+            save_outputs_to_ssm,
+            TfstateKey,
+        )
+
+        mock_ssm_client = Mock()
+        tfstate_key = TfstateKey(repository="my-repo", environment="prod")
+        output_key = "output1"
+        output_value = "value1"
+
+        save_outputs_to_ssm(
+            mock_ssm_client,
+            tfstate_key,
+            output_key,
+            output_value,
+            is_secret=True,
+        )
+
+        mock_ssm_client.put_parameter.assert_called_with(
+            Name="/my-repo/prod/output1",
+            Value="value1",
+            Type="SecureString",
             Overwrite=True,
             Tier="Standard",
         )

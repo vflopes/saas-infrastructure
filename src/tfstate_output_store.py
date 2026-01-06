@@ -51,11 +51,14 @@ def read_tfstate_from_s3(
     return tfstate_data
 
 
-def get_outputs_from_tfstate(tfstate_data: str) -> dict:
+def get_outputs_from_tfstate(tfstate_data: str) -> dict[str, tuple[str, bool]]:
     tfstate: dict = json.loads(tfstate_data)
     outputs = tfstate.get("outputs", [])
 
-    return {key: output["value"] for key, output in outputs.items()}
+    return {
+        key: (output["value"], output.get("sensitive", False))
+        for key, output in outputs.items()
+    }
 
 
 def parse_tfstate_key(object_key: str) -> TfstateKey:
@@ -75,6 +78,7 @@ def save_outputs_to_ssm(
     tfstate_key: TfstateKey,
     output_key: str,
     output_value: Any,
+    is_secret: bool = False,
 ) -> None:
     parameter_name = (
         f"/{tfstate_key.repository}/{tfstate_key.environment}/{output_key}"
@@ -84,7 +88,7 @@ def save_outputs_to_ssm(
         Value=json.dumps(output_value)
         if not isinstance(output_value, str)
         else output_value,
-        Type="String",
+        Type="SecureString" if is_secret else "String",
         Overwrite=True,
         Tier="Standard",
     )
@@ -107,7 +111,7 @@ def lambda_handler(event: S3Event, context):
 
         tfstate_key = parse_tfstate_key(object_key)
 
-        for output_key, output_value in outputs.items():
+        for output_key, (output_value, is_secret) in outputs.items():
             logger().info(
                 f"Saving output {output_key} from {tfstate_key} to SSM Parameter Store"
             )
@@ -117,4 +121,5 @@ def lambda_handler(event: S3Event, context):
                 tfstate_key,
                 output_key,
                 output_value,
+                is_secret,
             )
